@@ -142,8 +142,6 @@ def shifty_shifts(start, goal, limit):
 
 def pawssible_patches(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
-
-
     if limit < 0: # Fill in the condition
         # BEGIN
         "*** YOUR CODE HERE ***"
@@ -187,6 +185,17 @@ def report_progress(typed, prompt, user_id, send):
     """Send a report of your id and progress so far to the multiplayer server."""
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    count = 0
+    for i in range(0, len(typed)):
+        if typed[i] != prompt[i]:
+            break
+        count += 1
+
+    progress = count / len(prompt)
+    send({"id": user_id, "progress": progress})
+
+    return progress
+
     # END PROBLEM 8
 
 
