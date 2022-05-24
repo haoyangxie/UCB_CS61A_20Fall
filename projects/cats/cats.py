@@ -193,9 +193,7 @@ def report_progress(typed, prompt, user_id, send):
 
     progress = count / len(prompt)
     send({"id": user_id, "progress": progress})
-
     return progress
-
     # END PROBLEM 8
 
 
@@ -222,6 +220,13 @@ def time_per_word(times_per_player, words):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    res = []
+    for list in times_per_player:
+        tmp = []
+        for i in range(1, len(list)):
+            tmp.append(list[i] - list[i - 1])
+        res.append(tmp)
+    return game(words, res)
     # END PROBLEM 9
 
 
@@ -237,6 +242,18 @@ def fastest_words(game):
     word_indices = range(len(all_words(game)))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    fastest_words_lists = [[] for i in player_indices]
+
+    for i in word_indices:
+        min_time = float("inf")
+        for j in player_indices:
+            player_word_time = time(game, j, i)
+            if player_word_time < min_time:
+                min_time = player_word_time
+                min_player = j
+        fastest_words_lists[min_player].append(word_at(game, i))
+
+    return fastest_words_lists
     # END PROBLEM 10
 
 
