@@ -44,11 +44,13 @@ def planet(size):
     """Construct a planet of some size."""
     assert size > 0
     "*** YOUR CODE HERE ***"
+    return ["planet", size]
 
 def size(w):
     """Select the size of a planet."""
     assert is_planet(w), 'must call size on a planet'
     "*** YOUR CODE HERE ***"
+    return w[1]
 
 def is_planet(w):
     """Whether w is a planet."""
@@ -105,6 +107,13 @@ def balanced(m):
     True
     """
     "*** YOUR CODE HERE ***"
+    if is_planet(m):
+        return True
+    else:
+        left_end, right_end = end(left(m)), end(right(m))
+        torque_left = length(left(m)) * total_weight(left_end)
+        torque_right = length(right(m)) * total_weight(right_end)
+        return torque_left == torque_right and balanced(left_end) and balanced(right_end)
 
 def totals_tree(m):
     """Return a tree representing the mobile with its total weight at the root.
@@ -136,6 +145,11 @@ def totals_tree(m):
     True
     """
     "*** YOUR CODE HERE ***"
+    if is_planet(m):
+        return tree(size(m))
+    else:
+        branches = [totals_tree(end(f(m))) for f in [left, right]]
+        return tree(sum([label(b) for b in branches]), branches)
 
 
 def replace_leaf(t, find_value, replace_value):
@@ -168,6 +182,11 @@ def replace_leaf(t, find_value, replace_value):
     True
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t) and label(t) == find_value:
+        return tree(replace_value, [])
+    else:
+        bs = [replace_leaf(b, find_value, replace_value) for b in branches(t)]
+        return tree(label(t), bs)
 
 
 def preorder(t):
@@ -181,6 +200,14 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    result = [label(t)]
+
+    if is_leaf(t):
+        return result
+    else:
+        for branch in branches(t):
+            result += preorder(branch)
+    return result
 
 
 def has_path(t, word):
@@ -213,7 +240,19 @@ def has_path(t, word):
     """
     assert len(word) > 0, 'no path for empty word.'
     "*** YOUR CODE HERE ***"
-
+    if len(word) == 1 and label(t)==word[0]:
+        return True
+    if len(word) == 1 and label(t)!=word[0]:
+        return False
+        
+    if label(t) != word[0]:
+        return False
+    else:
+        for branch in branches(t):
+            if has_path(branch, word[1:]):
+                return True
+        return False
+            
 
 def interval(a, b):
     """Construct an interval from a to b."""
@@ -222,10 +261,13 @@ def interval(a, b):
 def lower_bound(x):
     """Return the lower bound of interval x."""
     "*** YOUR CODE HERE ***"
+    return x[0]
 
 def upper_bound(x):
     """Return the upper bound of interval x."""
     "*** YOUR CODE HERE ***"
+    return x[1]
+
 def str_interval(x):
     """Return a string representation of interval x.
     """
