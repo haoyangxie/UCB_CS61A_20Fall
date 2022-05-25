@@ -228,6 +228,14 @@ def remainders_generator(m):
     11
     """
     "*** YOUR CODE HERE ***"
+    def gen(number):
+        for i in naturals():
+            if i % m == number:
+                yield i
+
+    for i in range(m):
+        yield gen(i)
+
 
 
 def naturals():
